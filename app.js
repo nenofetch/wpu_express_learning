@@ -1,22 +1,50 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const expressLayouts = require('express-ejs-layouts')
+
+// use ejs as template engine and use express-ejs-layouts for layouting
+app.set('view engine', 'ejs')
+app.use(expressLayouts)
 
 app.get('/', (req, res) => {
-  res.sendFile('./index.html', { root: __dirname })
+  const barang = [{
+    nama: 'Nike Jordan',
+    price: '$80'
+  },
+  {
+    nama: 'Nike x Dior',
+    price: '$500'
+  }]
+  res.status(200).render('index', {
+    layout: 'layouts/main-layout',
+    nama: 'Neno Arisma',
+    title: 'Homepage',
+    barang
+  })
 })
 
 app.get('/about', (req, res) => {
-  res.sendFile('./about.html', { root: __dirname })
+  res.status(200).render('about', {
+    layout: 'layouts/main-layout',
+    title: 'About Page'
+  })
 })
 
 app.get('/contact', (req, res) => {
-  res.sendFile('./contact.html', { root: __dirname })
+  res.status(200).render('contact', { 
+    layout: 'layouts/main-layout', 
+    title: 'Contact Page' })
+})
+
+app.get('/product/:id', (req,res) => {
+  res.send(`ID produk anda adalah: ${req.params.id} <br> dengan kategori ${req.query.category}`)
 })
 
 app.use('/', (req, res) => {
-  res.status(404)
-  res.sendFile('./error.html', { root: __dirname })
+  res.status(404).render('error', { 
+    layout: 'layouts/main-layout', 
+    title: 'Upppss' })
 })
 
 app.listen(port, () => {

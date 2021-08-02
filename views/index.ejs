@@ -1,0 +1,15 @@
+
+    <h1>This is Web Server using ExpressJS as Backend</h1>
+    <h2> <%= nama %> </h2>
+
+    <h4>Daftar Nama Barang</h4>
+    <% if (barang.length < 1) { %>
+      <p>Daftar barang kosong</p>
+    <% } else {%> <% barang.forEach(brg => { %>
+      <ul>
+      <li>Nama: <%= brg.nama %></li>
+      <li>Harga: <%= brg.price %></li> 
+    </ul>
+    <% }) %> <% } %> 
+
+   
