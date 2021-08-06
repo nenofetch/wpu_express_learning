@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 const expressLayouts = require('express-ejs-layouts')
 const morgan = require('morgan')
+const { loadContacts, findContact } = require('./utils/contacts')
 
 // use ejs as template engine and use express-ejs-layouts for layouting
 app.set('view engine', 'ejs')
@@ -45,9 +46,20 @@ app.get('/about', (req, res) => {
 })
 
 app.get('/contact', (req, res) => {
+  const contacts = loadContacts()
   res.status(200).render('contact', {
     layout: 'layouts/main-layout',
-    title: 'Contact Page'
+    title: 'Contact Page',
+    contacts
+  })
+})
+
+app.get('/contact/:nama', (req, res) => {
+  const contact = findContact(req.params.nama)
+  res.status(200).render('detail', {
+    layout: 'layouts/main-layout',
+    title: 'Contact Page',
+    contact
   })
 })
 
