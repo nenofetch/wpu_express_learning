@@ -2,24 +2,32 @@ const express = require('express')
 const app = express()
 const port = 3000
 const expressLayouts = require('express-ejs-layouts')
-const morgan = require('morgan')
-const { loadContacts, findContact } = require('./utils/contacts')
+// const morgan = require('morgan')
+const { loadContacts, findContact, addContact, checkDuplicate } = require('./utils/contacts')
+const { body, validationResult, check } = require('express-validator')
+const session = require('express-session')
+const cookieParser = require('cookie-parser')
+const flash = require('connect-flash')
+
+app.use(cookieParser('secret'))
+app.use(session({
+  cookie: { maxAge: 6000 },
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}))
+app.use(flash())
 
 // use ejs as template engine and use express-ejs-layouts for layouting
 app.set('view engine', 'ejs')
 
 // Third-Party Middleware
 app.use(expressLayouts)
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 // Build-In Middleware
 app.use(express.static('public'))
-
-// Application middleware
-app.use((req, res, next) => {
-  console.log('Time:', Date.now())
-  next()
-})
+app.use(express.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
   const barang = [{
@@ -50,15 +58,46 @@ app.get('/contact', (req, res) => {
   res.status(200).render('contact', {
     layout: 'layouts/main-layout',
     title: 'Contact Page',
-    contacts
+    contacts,
+    msg: req.flash('msg')
   })
+})
+
+app.get('/contact/add', (req, res) => {
+  res.render('add-contact', {
+    layout: 'layouts/main-layout',
+    title: 'Tambah Contact'
+  })
+})
+
+app.post('/contact', [
+  body('nama').custom((value) => {
+    const duplicate = checkDuplicate(value)
+    if (duplicate) {
+      throw new Error('Nama kontak ini sudah tersimpan, silahkan gunakan nama lain!')
+    }
+  }),
+  check('email', 'Email tidak valid!').isEmail(),
+  check('nohp', 'No HP tidak valid').isMobilePhone('id-ID')
+], (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    res.render('add-contact', {
+      layout: 'layouts/main-layout',
+      title: 'Tambah Contact',
+      errors: errors.array()
+    })
+  }
+  addContact(req.body)
+  req.flash('msg', 'Data contact berhasil ditambahkan!')
+  res.redirect('/contact')
 })
 
 app.get('/contact/:nama', (req, res) => {
   const contact = findContact(req.params.nama)
   res.status(200).render('detail', {
     layout: 'layouts/main-layout',
-    title: 'Contact Page',
+    title: 'Contact Detail',
     contact
   })
 })
