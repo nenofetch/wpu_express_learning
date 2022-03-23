@@ -1,6 +1,6 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
-const port = 3000
 const expressLayouts = require('express-ejs-layouts')
 // const morgan = require('morgan')
 const { loadContacts, findContact, addContact, checkDuplicate, deleteContacts, updateContact } = require('./utils/contacts')
@@ -16,7 +16,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
-app.use(flash())
+app.use(flash(), cors())
 
 // use ejs as template engine and use express-ejs-layouts for layouting
 app.set('view engine', 'ejs')
@@ -164,6 +164,6 @@ app.use((req, res) => {
   })
 })
 
-app.listen(port, () => {
-  console.log(`Example server run on localhost:${port}`)
+app.listen(8080, () => {
+  console.log(`Web server was running on port 8080`)
 })
