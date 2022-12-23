@@ -1,32 +1,44 @@
 {
-  "name": "backend-express",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start-dev": "nodemon app"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "connect-flash": "^0.1.1",
-    "cookie-parser": "^1.4.5",
-    "cors": "^2.8.5",
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "express-ejs-layouts": "^2.5.1",
-    "express-session": "^1.17.2",
-    "express-validator": "^6.12.1",
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.12"
-  },
-  "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0"
-  }
+	"name": "backend-express",
+	"version": "1.0.0",
+	"description": "",
+	"main": "app.js",
+	"scripts": {
+		"start": "node dist/index.js",
+		"start-dev": "nodemon app",
+		"build": "npx tsc",
+		"dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"connect-flash": "^0.1.1",
+		"cookie-parser": "^1.4.5",
+		"cors": "^2.8.5",
+		"ejs": "^3.1.6",
+		"express": "^4.17.1",
+		"express-ejs-layouts": "^2.5.1",
+		"express-session": "^1.17.2",
+		"express-validator": "^6.12.1",
+		"morgan": "^1.10.0",
+		"nodemon": "^2.0.12"
+	},
+	"devDependencies": {
+		"@types/body-parser": "^1.19.2",
+		"@types/connect-flash": "^0.0.37",
+		"@types/cookie-parser": "^1.4.3",
+		"@types/cors": "^2.8.13",
+		"@types/express": "^4.17.15",
+		"@types/express-ejs-layouts": "^2.5.0",
+		"@types/express-session": "^1.17.5",
+		"@types/express-validator": "^3.0.0",
+		"@types/node": "^18.11.17",
+		"concurrently": "^7.6.0",
+		"eslint": "^7.32.0",
+		"eslint-config-standard": "^16.0.3",
+		"eslint-plugin-import": "^2.23.4",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^5.1.0"
+	}
 }

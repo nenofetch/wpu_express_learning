@@ -1,13 +1,16 @@
-const express = require('express')
-const cors = require('cors')
-const app = express()
-const expressLayouts = require('express-ejs-layouts')
-// const morgan = require('morgan')
-const { loadContacts, findContact, addContact, checkDuplicate, deleteContacts, updateContact } = require('./utils/contacts')
-const { body, validationResult, check } = require('express-validator')
-const session = require('express-session')
-const cookieParser = require('cookie-parser')
-const flash = require('connect-flash')
+import express, {Express, Request, Response} from 'express'
+const app: Express = express()
+
+// Import CORS
+import cors from 'cors'
+import expressLayouts from 'express-ejs-layouts'
+import { body, validationResult, check } from 'express-validator'
+import session from 'express-session'
+import cookieParser from 'cookie-parser'
+import flash from 'connect-flash'
+
+// importing my utils
+import { loadContacts, findContact, addContact, checkDuplicate, deleteContacts, updateContact } from './utils/contacts'
 
 app.use(cookieParser('secret'))
 app.use(session({
@@ -29,7 +32,7 @@ app.use(expressLayouts)
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   const barang = [{
     nama: 'Nike Jordan',
     price: '$80'
@@ -46,14 +49,14 @@ app.get('/', (req, res) => {
   })
 })
 
-app.get('/about', (req, res) => {
+app.get('/about', (req: Request, res) => {
   res.status(200).render('about', {
     layout: 'layouts/main-layout',
     title: 'About Page'
   })
 })
 
-app.get('/contact', (req, res) => {
+app.get('/contact', (req: Request, res) => {
   const contacts = loadContacts()
   res.status(200).render('contact', {
     layout: 'layouts/main-layout',
@@ -63,7 +66,7 @@ app.get('/contact', (req, res) => {
   })
 })
 
-app.get('/contact/add', (req, res) => {
+app.get('/contact/add', (req: Request, res) => {
   res.render('add-contact', {
     layout: 'layouts/main-layout',
     title: 'Tambah Contact'
@@ -80,7 +83,7 @@ app.post('/contact', [
   }),
   check('email', 'Email tidak valid!').isEmail(),
   check('nohp', 'No HP tidak valid').isMobilePhone('id-ID')
-], (req, res) => {
+], (req: Request, res: Response) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     res.render('add-contact', {
@@ -95,7 +98,7 @@ app.post('/contact', [
   }
 })
 
-app.get('/contact/delete/:nama', (req, res) => {
+app.get('/contact/delete/:nama', (req: Request, res: Response) => {
   const contact = findContact(req.params.nama)
 
   if (!contact) {
@@ -107,7 +110,7 @@ app.get('/contact/delete/:nama', (req, res) => {
   }
 })
 
-app.get('/contact/edit/:nama', (req, res) => {
+app.get('/contact/edit/:nama', (req: Request, res: Response) => {
   const contact = findContact(req.params.nama)
 
   res.render('edit-contact', {
@@ -127,7 +130,7 @@ app.post('/contact/update', [
   }),
   check('email', 'Email tidak valid!').isEmail(),
   check('nohp', 'No HP tidak valid').isMobilePhone('id-ID')
-], (req, res) => {
+], (req:Request, res:Response) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     res.render('edit-contact', {
@@ -143,7 +146,7 @@ app.post('/contact/update', [
   }
 })
 
-app.get('/contact/:nama', (req, res) => {
+app.get('/contact/:nama', (req: Request, res: Response) => {
   const contact = findContact(req.params.nama)
 
   res.status(200).render('detail', {
@@ -153,11 +156,11 @@ app.get('/contact/:nama', (req, res) => {
   })
 })
 
-app.get('/product/:id', (req, res) => {
+app.get('/product/:id', (req:Request, res: Response) => {
   res.send(`ID produk anda adalah: ${req.params.id} <br> dengan kategori ${req.query.category}`)
 })
 
-app.use((req, res) => {
+app.use((req: Request, res: Response) => {
   res.status(404).render('error', {
     layout: 'layouts/main-layout',
     title: 'Upppss'
